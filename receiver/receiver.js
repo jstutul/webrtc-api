@@ -1,6 +1,5 @@
-//create web socket object
+const webSocket = new WebSocket("ws://127.0.0.1:3000")
 
-const webSocket=new WebSocket("ws://webrtc-jst.herokuapp.com/");
 webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data))
 }
@@ -40,8 +39,7 @@ let username
 
 function joinCall() {
 
-    username = document.getElementById("username-input").value;
-    console.log(username);
+    username = document.getElementById("username-input").value
 
     document.getElementById("video-call-div")
     .style.display = "inline"
@@ -59,13 +57,17 @@ function joinCall() {
         localStream = stream
         document.getElementById("local-video").srcObject = localStream
 
-        let configaration={
-            iceServers:{
-                "urls":[{"urls":["stun:stun.l.google.com:19302"]}]
-            }
+        let configuration = {
+            iceServers: [
+                {
+                    "urls": ["stun:stun.l.google.com:19302", 
+                    "stun:stun1.l.google.com:19302", 
+                    "stun:stun2.l.google.com:19302"]
+                }
+            ]
         }
 
-        peerConn = new RTCPeerConnection(configaration)
+        peerConn = new RTCPeerConnection(configuration)
         peerConn.addStream(localStream)
 
         peerConn.onaddstream = (e) => {

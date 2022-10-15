@@ -1,86 +1,96 @@
-//create web socket object
+const webSocket = new WebSocket("ws://127.0.0.1:3000")
 
-const webSocket=new WebSocket("ws://webrtc-jst.herokuapp.com/");
-let peerConn;
-let username;
-webSocket.onmessage=e=>{
-    handleSignallingData(JSON.parse(e.data));
+webSocket.onmessage = (event) => {
+    handleSignallingData(JSON.parse(event.data))
 }
 
-function handleSignallingData(data){
-    switch (data.type){
+function handleSignallingData(data) {
+    switch (data.type) {
         case "answer":
-            peerConn.setRemoteDescription(data.answer);
-            break;
+            peerConn.setRemoteDescription(data.answer)
+            break
         case "candidate":
-            peerConn.addIceCandidate(data.candidate);    
+            peerConn.addIceCandidate(data.candidate)
     }
 }
 
-function sendUsername(){
-    username=document.getElementById("username-input").value;
+let username
+function sendUsername() {
+
+    username = document.getElementById("username-input").value
     sendData({
-        type:"store_user",
+        type: "store_user"
     })
 }
 
-function sendData(data){
-    data.username=username;
-    webSocket.send(JSON.stringify(data));
+function sendData(data) {
+    data.username = username
+    webSocket.send(JSON.stringify(data))
 }
 
-function startCall(){
-    document.getElementById('video-call-div').style.display="inline";
+
+let localStream
+let peerConn
+function startCall() {
+    document.getElementById("video-call-div")
+    .style.display = "inline"
+
     navigator.getUserMedia({
-        video:{
-            framRate:24,
-            width:{
-                min:480,ideal:720,max:1280
+        video: {
+            frameRate: 24,
+            width: {
+                min: 480, ideal: 720, max: 1280
             },
             aspectRatio: 1.33333
         },
-        audio:true,
-    },(stream)=>{
+        audio: true
+    }, (stream) => {
         localStream = stream
-        document.getElementById("local-video").srcObject = localStream;
-        //create pair connection
-        let configaration={
-            iceServers:{
-                "urls":[{"urls":["stun:stun.l.google.com:19302"]}]
-            }
+        document.getElementById("local-video").srcObject = localStream
+
+        let configuration = {
+            iceServers: [
+                {
+                    "urls": ["stun:stun.l.google.com:19302", 
+                    "stun:stun1.l.google.com:19302", 
+                    "stun:stun2.l.google.com:19302"]
+                }
+            ]
         }
-        peerConn=new RTCPeerConnection(configaration);
-        peerConn.addStream(localStream);
-        peerConn.onaddstrem=e=>{
-            document.getElementById("remote-vedio").srcObject=e.stream;
+
+        peerConn = new RTCPeerConnection(configuration)
+        peerConn.addStream(localStream)
+
+        peerConn.onaddstream = (e) => {
+            document.getElementById("remote-video")
+            .srcObject = e.stream
         }
-        peerConn.onicecandidate=((e)=>{
-            if(e.candidate==null){
-                return null;
-            }
+
+        peerConn.onicecandidate = ((e) => {
+            if (e.candidate == null)
+                return
             sendData({
-                type:"store_candidate",
-                candidate:e.candidate,
+                type: "store_candidate",
+                candidate: e.candidate
             })
-
         })
-        createAndSendOffer();
 
-    },(error)=>{
-        console.log(error);
+        createAndSendOffer()
+    }, (error) => {
+        console.log(error)
     })
-
 }
 
-function createAndSendOffer(){
-    peerConn.createOffer((offer)=>{
+function createAndSendOffer() {
+    peerConn.createOffer((offer) => {
         sendData({
-            type:"store_offer",
-            offer:offer,
+            type: "store_offer",
+            offer: offer
         })
-        peerConn.setLocalDescription(offer);
-    },(error)=>{
-        console.log(error);
+
+        peerConn.setLocalDescription(offer)
+    }, (error) => {
+        console.log(error)
     })
 }
 

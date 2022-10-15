@@ -1,38 +1,41 @@
 const Socket = require("websocket").server
 const http = require("http")
-const hostname="0.0.0.0";
-const port=3000;
+
 const server = http.createServer((req, res) => {
-    res.statusCode=200;
-    res.setHeader('Content-Type','text/plain')
-    res.end("js tutul")
+    res.send("hi")
 })
 
-server.listen(process.env.PORT||port ,() => {
+server.listen(process.env.PORT||3000, () => {
     console.log("Listening on port 3000...")
 })
 
 const webSocket = new Socket({ httpServer: server })
+
 let users = []
 
-webSocket.on('request',(req)=>{
-    //create connection variable for hold connection
-    const connection=req.accept();
-    connection.on('message',(message)=>{
-        const data=JSON.parse(message.utf8Data);
-        const user=findUser(data.username);
-        switch(data.type){
+webSocket.on('request', (req) => {
+    const connection = req.accept()
+
+    connection.on('message', (message) => {
+        const data = JSON.parse(message.utf8Data)
+
+        const user = findUser(data.username)
+
+        switch(data.type) {
             case "store_user":
+
                 if (user != null) {
                     return
                 }
-                const newUser={
-                    conn:connection,
-                    username:data.username,
+
+                const newUser = {
+                     conn: connection,
+                     username: data.username
                 }
+
                 users.push(newUser)
                 console.log(newUser.username)
-                break  
+                break
             case "store_offer":
                 if (user == null)
                     return
@@ -88,6 +91,7 @@ webSocket.on('request',(req)=>{
                 break
         }
     })
+
     connection.on('close', (reason, description) => {
         users.forEach(user => {
             if (user.conn == connection) {
@@ -97,7 +101,6 @@ webSocket.on('request',(req)=>{
         })
     })
 })
-
 
 function sendData(data, conn) {
     conn.send(JSON.stringify(data))
