@@ -2,7 +2,11 @@ const Socket = require("websocket").server
 const http = require("http")
 const hostname="0.0.0.0";
 const port=3000;
-const server = http.createServer((req, res) => {})
+const server = http.createServer((req, res) => {
+    res.statusCode=200;
+    res.setHeader('Content-Type','text/plain')
+    res.end("js tutul")
+})
 
 server.listen(port,hostname, () => {
     console.log("Listening on port 3000...")

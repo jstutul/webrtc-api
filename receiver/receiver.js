@@ -1,6 +1,6 @@
 //create web socket object
 
-const webSocket=new WebSocket("ws://127.0.0.1:3000");
+const webSocket=new WebSocket("ws://webrtc-jst.herokuapp.com/");
 webSocket.onmessage = (event) => {
     handleSignallingData(JSON.parse(event.data))
 }

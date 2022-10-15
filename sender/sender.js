@@ -1,6 +1,6 @@
 //create web socket object
 
-const webSocket=new WebSocket("ws://127.0.0.1:3000");
+const webSocket=new WebSocket("ws://webrtc-jst.herokuapp.com/");
 let peerConn;
 let username;
 webSocket.onmessage=e=>{
