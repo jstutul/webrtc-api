@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webrtc</title>
+    <script src="receiver.js"></script>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div>
+        <input placeholder="Enter name"
+            type="text"
+            id="username-input"/>
+            <br>
+            <br>
+            <button onclick="joinCall()">Join Call</button>
+    </div>
+    <div id="video-call-div">
+        <video muted id="local-video" autoplay> </video>
+        <video id="remote-video" autoplay>
+        <button onclick="muteAudio()">Mute Video</button>    
+        <button onclick="muteVideo()">Mute Video</button>    
+        </video>
+    </div>
+</body>
+</html>

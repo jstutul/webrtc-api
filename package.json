@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "webrtc": "^1.14.1",
+    "websocket": "^1.0.34"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "webrtc",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
