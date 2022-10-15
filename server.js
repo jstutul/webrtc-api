@@ -8,7 +8,7 @@ const server = http.createServer((req, res) => {
     res.end("js tutul")
 })
 
-server.listen(port,hostname, () => {
+server.listen(process.env.PORT||port ,() => {
     console.log("Listening on port 3000...")
 })
 
